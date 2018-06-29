@@ -1,0 +1,5 @@
+
+.nexmo-app
+firebase-debug.log
+node_modules/
+functions/private.key

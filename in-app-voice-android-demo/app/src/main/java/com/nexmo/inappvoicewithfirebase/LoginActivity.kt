@@ -38,7 +38,7 @@ class LoginActivity : BaseActivity(), RequestHandler<User>, Callback<UserJWT> {
     }
 
     private fun goToCallActivity() {
-        showProgress(true)
+        showProgress(false)
         startActivity(
                 Intent(this, CallActivity::class.java)
         )
@@ -51,20 +51,24 @@ class LoginActivity : BaseActivity(), RequestHandler<User>, Callback<UserJWT> {
         }
     }
 
+    //Error logging the User in with the Nexmo Stitch SDK
     override fun onError(apiError: NexmoAPIError?) {
         showProgress(false)
         logAndShow(apiError?.message)
     }
 
+    //User successfully logged in with the Nexmo Stitch SDK
     override fun onSuccess(result: User?) {
         goToCallActivity()
     }
 
+    //Successfully retrieved a JWT from the Firebase Function endpoint
     override fun onResponse(call: Call<UserJWT>?, response: Response<UserJWT>?) {
         val jwt = response?.body()?.user_jwt
         client.login(jwt, this)
     }
 
+    //Error networking to the Firebase Function endpoint to retrieve a JWT
     override fun onFailure(call: Call<UserJWT>?, t: Throwable?) {
         showProgress(false)
         logAndShow(t?.message)

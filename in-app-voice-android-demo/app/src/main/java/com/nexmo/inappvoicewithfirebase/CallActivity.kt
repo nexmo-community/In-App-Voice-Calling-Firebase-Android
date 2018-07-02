@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.activity_call.*
 class CallActivity : BaseActivity(), RequestHandler<Call> {
     private var currentCall: Call? = null
     private lateinit var client: ConversationClient
-    private val subscriptions = SubscriptionList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +43,7 @@ class CallActivity : BaseActivity(), RequestHandler<Call> {
                     showHangupButton()
                 }
             })
-        }).addTo(subscriptions)
+        })
     }
 
     private fun attachCallStateListener(incomingCall: Call) {
@@ -52,11 +51,11 @@ class CallActivity : BaseActivity(), RequestHandler<Call> {
         val callEventListener = ResultListener<CallEvent> { message ->
             logAndShow("callEvent : state: " + message.state + " .content:" + message.toString())
         }
-        incomingCall.event().add(callEventListener).addTo(subscriptions)
+        incomingCall.event().add(callEventListener)
     }
 
 
-    fun callPhone() {
+    private fun callPhone() {
         val phoneNumber = phoneNumberInput.text.toString()
 
         client.callPhone(phoneNumber, object : RequestHandler<Call> {
